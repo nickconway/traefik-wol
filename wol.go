@@ -269,6 +269,7 @@ func (a *Wol) serviceIsAlive() bool {
 }
 
 func (a *Wol) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	a.resetTimer()
 	if !a.serviceIsAlive() {
 		fmt.Println("Server is down, waking up")
 		err := a.wakeUp()
@@ -291,7 +292,6 @@ func (a *Wol) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			http.Error(rw, "Failed to start server", http.StatusInternalServerError)
 			return
 		}
-		a.resetTimer()
 	}
 
 	a.next.ServeHTTP(rw, req)
